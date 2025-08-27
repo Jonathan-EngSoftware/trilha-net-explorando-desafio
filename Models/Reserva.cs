@@ -1,3 +1,4 @@
+
 namespace DesafioProjetoHospedagem.Models
 {
     public class Reserva
@@ -6,7 +7,11 @@ namespace DesafioProjetoHospedagem.Models
         public Suite Suite { get; set; }
         public int DiasReservados { get; set; }
 
-        public Reserva() { }
+        // Propriedade NOVA para guardar se tem animal
+        public bool TemAnimalDeEstimacao { get; set; }
+
+        // Propriedade NOVA para guardar se tem criança
+        public bool TemCriancaMenorDe10 { get; set; }
 
         public Reserva(int diasReservados)
         {
@@ -15,16 +20,14 @@ namespace DesafioProjetoHospedagem.Models
 
         public void CadastrarHospedes(List<Pessoa> hospedes)
         {
-            // TODO: Verificar se a capacidade é maior ou igual ao número de hóspedes sendo recebido
-            // *IMPLEMENTE AQUI*
-            if (true)
+            if (Suite.Capacidade >= hospedes.Count)
             {
                 Hospedes = hospedes;
             }
             else
             {
-                // TODO: Retornar uma exception caso a capacidade seja menor que o número de hóspedes recebido
-                // *IMPLEMENTE AQUI*
+                // Retorna um erro se a capacidade for menor que o número de hóspedes
+                throw new Exception("A quantidade de hóspedes é maior que a capacidade da suíte.");
             }
         }
 
@@ -35,23 +38,28 @@ namespace DesafioProjetoHospedagem.Models
 
         public int ObterQuantidadeHospedes()
         {
-            // TODO: Retorna a quantidade de hóspedes (propriedade Hospedes)
-            // *IMPLEMENTE AQUI*
-            return 0;
+            return Hospedes.Count;
         }
 
         public decimal CalcularValorDiaria()
         {
-            // TODO: Retorna o valor da diária
-            // Cálculo: DiasReservados X Suite.ValorDiaria
-            // *IMPLEMENTE AQUI*
-            decimal valor = 0;
+            // Calcula o valor base da diária
+            decimal valor = DiasReservados * Suite.ValorDiaria;
 
-            // Regra: Caso os dias reservados forem maior ou igual a 10, conceder um desconto de 10%
-            // *IMPLEMENTE AQUI*
-            if (true)
+            // O valor da taxa para pet
+            decimal taxaPet = 50.00M; 
+
+            // CONDIÇÃO: Se tiver um animal, adiciona a taxa ao valor total
+            if (TemAnimalDeEstimacao)
             {
-                valor = 0;
+                valor += taxaPet;
+            }
+
+            // Aplica desconto de 10% para reservas de 10 dias ou mais
+            if (DiasReservados >= 10)
+            {
+                decimal desconto = valor * 0.10M;
+                valor = valor - desconto;
             }
 
             return valor;
